@@ -1,0 +1,45 @@
+.m-t-10 {
+  margin-top: 10px;
+}
+
+.p-L-20 {
+  padding-left: 20px;
+}
+
+.p-R-20 {
+  padding-right: 20px;
+}
+
+.f-z-18 {
+  font-size: 18px;
+}
+
+.f-c-t {
+  color: rgb(36, 41, 46);
+}
+
+.f-c-darkcyan {
+  color: darkcyan;
+}
+
+.f-c-darkcyan:hover {
+  color: #00CFCF;
+}
+
+.text-r {
+  text-align: right;
+}
+
+.btn {
+  display: block;
+  width: 80px;
+  height: 30px;
+  background: darkcyan;
+  border: 0;
+  border-radius: 5px;
+  color: gainsboro;
+}
+
+.bg {
+  background: #fafafa;
+}

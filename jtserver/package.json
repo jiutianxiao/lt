@@ -1,0 +1,21 @@
+{
+  "name": "jt",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fs-readfile-promise": "^3.0.0",
+    "koa": "^2.3.0",
+    "koa-multer": "^1.0.2",
+    "koa-router": "^7.2.1",
+    "koa-session2": "^2.2.5",
+    "koa2-cors": "^2.0.3",
+    "mime": "^2.0.3",
+    "mysql2": "^1.4.2"
+  }
+}
