@@ -1,6 +1,6 @@
 <template>
   <div id="post">
-    <reList v-if="show">标题</reList>
+    <reList v-if="show" ref="title">标题</reList>
     <p class="m-t-10">内容：</p>
     <div class="post-input" contenteditable="true">
       <p>
@@ -22,7 +22,8 @@
         show: false,
         pid: "",
         fid: "",
-        cid: ""
+        cid: "",
+        id: ""
       }
     },
     created(){
@@ -30,6 +31,7 @@
       this.pid = this.$route.query.pid;
       this.fid = this.$route.query.fid;
       this.cid = this.$route.query.cid;
+      this.id = this.$route.query.id;
       if (!this.pid) {
         this.show = true;
       }
@@ -41,15 +43,35 @@
     methods: {
       post(){
         let ele = document.querySelectorAll(".post-input p");
-        let con = {}
+        let con = {};
+        console.log(typeof ele[0].innerText);
         for (let i = 0, l = ele.length; i < l; i++) {
-          con[i] = ele[i].innerText;
+          if (l === 1 && !ele[i].innerText.length) {
+          } else {
+            con[i] = ele[i].innerText;
+          }
         }
-        axios.post(this.url + "/upPost", qs({
+        let data = {
           pid: this.pid,
           fid: this.fid,
           cid: this.cid,
-        }))
+          content: JSON.stringify(con),
+          ecreater: this.id,
+        };
+        if (!this.pid)
+          data["title"] = this.$refs.title.Io;
+        axios.post(this.url + "/upPost", qs.stringify(data)).then(data => {
+          if (data.code === "0000") {
+            alert(data.msg);
+            this.$router.go(-1);
+          } else if (data.code === "1001") {
+            alert(data.msg);
+            this.$router.push("/login");
+          } else {
+            alert(data.msg)
+            this.$router.push("/")
+          }
+        })
       }
     },
     components: {reList}

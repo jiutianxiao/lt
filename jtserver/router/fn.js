@@ -162,7 +162,7 @@ let list = async (ctx) => {
     limit = limit * (page + 1);
     let data = "";
     if (type === "0")
-        data = await Con(Connection, `SELECT * FROM list LIMIT ${page},${limit}`);
+        data = await Con(Connection, `SELECT * FROM list ORDER BY etime DESC LIMIT ${page},${limit}`);
     else if (type === "1") {
         type = "post";
         let column = `pid,fid,cid,content,img,creater,ecreater,ctime`;
@@ -187,7 +187,7 @@ let upPost = async (ctx) => {
     if (state) {
         let timeStamp = new Date().getTime(),
             me = state.username;
-        let {pid, fid, title, content, ctime, img, ecreater, econtent} = await parameter(ctx);
+        let {pid, fid, title, content, ctime, img, ecreater} = await parameter(ctx);
         img = img ? img : "{}";
         ecreater = ecreater ? ecreater : state.username;
         try {
@@ -196,7 +196,7 @@ let upPost = async (ctx) => {
                 if (typeof fid !== "undefined") {
                     //fid 回复二级楼层
                     let [cid, num] = await Promise.all([Con(Connection, `select max(cid) as max from post where pid=${pid}&&fid=${fid}`), Con(Connection, `SELECT creater, num FROM list WHERE pid=${pid}`)]);
-                    await Con(Connection, `INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime) VALUES ('${timeStamp}', '${fid}', '${cid[0]["max"] + 1}', '${content}', '${img}', '${me}', '${ecreater}', '${timeStamp}');update list set num='${num[0]["num"] + 1}',etime='${timeStamp}',ecreater='${ecreater}' where pid=${pid};INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);${num[0]["creater"] !== me ? `INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);${ecreater !== num[0]["creater"] && ecreater !== me ? `INSERT INTO ${ecreater} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0)` : ""}` : ""}`)
+                    await Con(Connection, `INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime) VALUES ('${pid}', '${fid}', '${Number(cid[0]["max"]) + 1}', '${content}', '${img}', '${me}', '${ecreater}', '${timeStamp}');update list set num='${Number(num[0]["num"]) + 1}',etime='${timeStamp}',ecreater='${ecreater}' where pid=${pid};INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);${num[0]["creater"] !== me ? `INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);${ecreater !== num[0]["creater"] && ecreater !== me ? `INSERT INTO ${ecreater} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0)` : ""}` : ""}`)
                 }
                 else {
                     //没有fid 回复一级楼层
@@ -205,12 +205,12 @@ let upPost = async (ctx) => {
                     ), Con(Connection,
                         `SELECT creater, num FROM list WHERE pid=${pid}`
                     )]);
-                    console.log(fid);
-                    console.log(
-                        `INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime) VALUES ('${timeStamp}', '${fid[0]["max"] + 1}', '1', '${content}', '${img}', '${me}', '${ecreater}', '${timeStamp}');update list set num=${num[0]["num"] + 1},etime=${timeStamp},ecreater=${ecreater} where pid=${pid};INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0)`
-                    );
                     await Con(Connection,
-                        `INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime) VALUES ('${timeStamp}', '${fid[0]["max"] + 1}', '1', '${content}', '${img}', '${me}', '${ecreater}', '${timeStamp}');update list set num='${num[0]["num"] + 1}',etime='${timeStamp}',ecreater='${ecreater}' where pid=${pid};INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);${num[0]["creater"] !== me ? `INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0)`
+                        `INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime) VALUES ('${pid}', '${Number(fid[0]["max"]) + 1}', '1', '${content}', '${img}', '${me}', '${ecreater}', '${timeStamp}');
+                        update list set num='${Number(num[0]["num"]) + 1}',etime='${timeStamp}',ecreater='${ecreater}' where pid=${pid};
+                        INSERT INTO ${me} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);
+                        ${num[0]["creater"] !== me ? 
+                            `INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,1,0)`
                             : ""}`)
                 }
 
@@ -220,8 +220,9 @@ let upPost = async (ctx) => {
                 }
             } else if (typeof title !== "undefined" || typeof content !== "undefined") {
                 //没有pid 默认发新贴
-                title = title ? title : content;
-                content = content ? content : title;
+                title = title ? title : JSON.parse(content)[0];
+                content = JSON.parse(content)[0] ? content : JSON.stringify({0:title});
+
                 await Con(Connection,
                     `INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime) VALUES ('${timeStamp}', '1', '1', '${content}', '${img}', '${me}', '${me}', '${timeStamp}');INSERT INTO list (pid, title, content, num, ctime, etime, creater, ecreater, classify)  VALUES ('${timeStamp}', '${title}', '${content}', '0','${timeStamp}', '${timeStamp}', '${me}','${me}', null);INSERT INTO ${me}(pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0)`
                 );
@@ -310,11 +311,8 @@ let userPost = async (ctx) => {
         ;
         //                       删除                     未读                          已读                         回复                       被回复                          默认非删除
         userId = userId ? userId : state.username;
-        console.log(
-            `select creater, pid, fid, cid, ctime, content from ${userId} where ${where}`
-        );
         let userPost = await Con(Connection,
-            `select creater, pid, fid, cid, ctime, content from ${userId} where ${where}`
+            `select creater, pid, fid, cid, ctime, content from ${userId} where ${where} ORDER BY ctime DESC`
         );
         ctx.body = {
             code: "0000",
