@@ -18,7 +18,6 @@
   import axios from "axios";
   import {mapState} from "vuex";
   import {a} from "@/JS/fn"
-
   export default({
     name: 'index',
     data(){
@@ -28,7 +27,7 @@
     },
     computed: {...mapState(["url"])},
     created(){
-      this.b();
+      this.a();
       document.title = "首页";
       localStorage.tag = 1;
       sessionStorage.tag = 2;
@@ -41,10 +40,7 @@
       })
     },
     methods: {
-      a,
-      b(){
-        this.a();
-      }
+      a
     },
     components: {pageList, pageTop, pageSusp}
   })

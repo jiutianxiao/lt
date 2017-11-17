@@ -3,5 +3,5 @@
  */
 
 export const a = () => {
-  // window.router.push("/login")
+  globalRouter.push("/login")
 }
