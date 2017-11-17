@@ -47,7 +47,6 @@
         this.login({userId, passWd})
       },
       login(data){
-          debugger
         axios.post(this.url + "/login", qs.stringify(data))
           .then(data => {
             if (data.code === "0000") {
