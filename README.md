@@ -10,6 +10,8 @@
 [node](https://nodejs.org/zh-cn/)首先要安装node
 [vue脚本架](https://www.npmjs.com/package/vue-cli)的搭建
 最后安装mysql
+
+项目启动以后请访问http://localhost:3000/#/
 ````
 ## server使用的是koaJS
 ````````````````````
@@ -31,7 +33,6 @@
 ## web用的是VUE 
 ````````````````````
 * 在使用时，建议 vue run build 以后放到server根目录下面，因为我没有处理，跨域登录问题
-* 顺便把/src/data/store.js里面的url改掉，因为那里面写的是我的本地IP
 ````````````````````
 ### 功能
 ````````````````````

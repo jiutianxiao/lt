@@ -17,6 +17,7 @@
   import pageSusp from "@/components/pageSusp"
   import axios from "axios";
   import {mapState} from "vuex";
+  import {a} from "@/JS/fn"
 
   export default({
     name: 'index',
@@ -27,17 +28,23 @@
     },
     computed: {...mapState(["url"])},
     created(){
+      this.b();
       document.title = "首页";
       localStorage.tag = 1;
       sessionStorage.tag = 2;
       axios.get(this.url + "/list", {params: {type: 0}}).then(data => {
         if (data.code === "0000") {
           this.data = data.data;
-          console.log(this.data);
         } else {
           alert(data.msg)
         }
       })
+    },
+    methods: {
+      a,
+      b(){
+        this.a();
+      }
     },
     components: {pageList, pageTop, pageSusp}
   })
@@ -52,7 +59,8 @@
     position: relative;
     top: 50px;
   }
-  .app-index-list li{
+
+  .app-index-list li {
     margin: 2px 0;
     border: 1px solid rgba(0, 139, 139, 0.29);
     border-bottom: 0;

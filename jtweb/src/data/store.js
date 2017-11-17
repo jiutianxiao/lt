@@ -19,7 +19,7 @@ export const store = new Vuex.Store({
       //公众状态
       sideBarOpened: false,
       userState: "",
-      url: "http://192.168.100.182:3000",
+      url: "http://localhost:3000",
       post: {pid: "", fid: "", cid: ""}
     },
 

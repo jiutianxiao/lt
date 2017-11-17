@@ -3,7 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+window.router = router;
 import {store} from './data/store'
 Vue.config.productionTip = false;
 
