@@ -1,15 +1,16 @@
 # lt
 # 特别说明
-`
+````
 *** 此项目正在持续开发中，所有权归“九天逍”
 *** 如果感兴趣，可以fork
-`
+````
+
 ##安装说明
-`
+````
 [node](https://nodejs.org/zh-cn/)首先要安装node
 [vue脚本架](https://www.npmjs.com/package/vue-cli)的搭建
 最后安装mysql
-`
+````
 ## server使用的是koaJS
 ````````````````````
 * 在启动前，应该先建立数据库，数据结构在data文件夹里面
