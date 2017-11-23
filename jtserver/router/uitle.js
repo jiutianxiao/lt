@@ -67,15 +67,17 @@ let FnSession = (ctx, user) => {
 //mysql返回数据格式化
 let SQLDataForm = (roow) => {
     let ary = [];
-    for (let i = 0; i < roow.length; i++) {
-        let data = Object.getOwnPropertyNames(roow[i]);
-        let obj = {};
-        for (let key of data) {
-            obj[key] = new String(roow[i][key]).toString();
+    let l = roow.length;
+    if (l !== 0) {
+        for (let i = 0; i < l; i++) {
+            let data = Object.getOwnPropertyNames(roow[i]);
+            let obj = {};
+            for (let key of data) {
+                obj[key] = new String(roow[i][key]).toString();
+            }
+            ary.push(obj);
         }
-        ary.push(obj);
     }
-
     return ary
 };
 

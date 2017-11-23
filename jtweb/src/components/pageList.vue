@@ -12,10 +12,11 @@
           :src="item"></a>
       </li>
     </ul>
-    <p>创建人：{{data.creater}}  回复({{data.num}})</p>
+    <p>创建人：{{data.creater}}  回复({{data.num}}) <span @click="dianzan">good({{data.good}})</span></p>
   </div>
 </template>
 <script>
+  import {good} from "@/JS/fn"
   export default({
     name: 'pageList',
     data(){
@@ -24,6 +25,16 @@
       }
     },
     props: ["data"],
+    methods: {
+      dianzan(){
+//          点赞
+        let data = this.data;
+        good({pid: data.pid, fid: 1, cid: 1}).then(data => {
+          alert(data.msg);
+          this.data.good = Number(this.data.good) + Number(data.data);
+        })
+      }
+    },
     components: {}
   })
 </script>

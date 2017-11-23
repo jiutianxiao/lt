@@ -7,9 +7,9 @@ const multer = require("koa-multer");//上传文件模块
 
 //数据库配置
 const Connection = MySql.createConnection({
-    host: 'localhost',
+    host: '192.168.100.182',
     user: 'root',
-    password: 'root',
+    password: '123456',
     database: 'luntan',
     port: 3306,
     multipleStatements: true
@@ -209,7 +209,7 @@ let upPost = async (ctx) => {
                         `INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime) VALUES ('${pid}', '${Number(fid[0]["max"]) + 1}', '1', '${content}', '${img}', '${me}', '${ecreater}', '${timeStamp}');
                         update list set num='${Number(num[0]["num"]) + 1}',etime='${timeStamp}',ecreater='${ecreater}' where pid=${pid};
                         INSERT INTO ${me} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);
-                        ${num[0]["creater"] !== me ? 
+                        ${num[0]["creater"] !== me ?
                             `INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,1,0)`
                             : ""}`)
                 }
@@ -221,7 +221,7 @@ let upPost = async (ctx) => {
             } else if (typeof title !== "undefined" || typeof content !== "undefined") {
                 //没有pid 默认发新贴
                 title = title ? title : JSON.parse(content)[0];
-                content = JSON.parse(content)[0] ? content : JSON.stringify({0:title});
+                content = JSON.parse(content)[0] ? content : JSON.stringify({0: title});
 
                 await Con(Connection,
                     `INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime) VALUES ('${timeStamp}', '1', '1', '${content}', '${img}', '${me}', '${me}', '${timeStamp}');INSERT INTO list (pid, title, content, num, ctime, etime, creater, ecreater, classify)  VALUES ('${timeStamp}', '${title}', '${content}', '0','${timeStamp}', '${timeStamp}', '${me}','${me}', null);INSERT INTO ${me}(pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${timeStamp}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0)`
@@ -381,6 +381,46 @@ let delPost = async (ctx) => {
 let upFile = async (ctx) => {
     ctx.body = ctx.req.file
 };
+//点赞
+let good = async (ctx) => {
+    let state = await FnSession(ctx);
+    if (state) {
+        try {
+            let timeStamp = new Date().getTime(), me = state.username;
+            let {pid, fid, cid} = await parameter(ctx);
+            let a = await Con(Connection, `SELECT * FROM post WHERE pid='${pid}' AND fid='${fid}' AND cid='${cid}' AND creater='${me}' AND isNULL(content)`);
+            if (a.length === 0) {
+                await Con(Connection, `update list set good=good+1 ,etime='${timeStamp}' where pid=${pid};
+                    INSERT INTO post (pid, fid, cid, creater, ctime) VALUES ('${pid}', ${fid}, ${cid}, '${me}', '${timeStamp}')`);
+                ctx.body = {
+                    code: "0000",
+                    data: 1,
+                    msg: "点赞成功"
+                }
+            } else {
+                await Con(Connection, `update list set good=good-1 ,etime='${timeStamp}' where pid=${pid};
+                     delete from post where pid=${pid} and fid=${fid} and cid=${cid} and isNULL(content)`);
+                ctx.body = {
+                    code: "0000",
+                    data: -1,
+                    msg: "取消成功"
+                }
+            }
+
+        } catch (e) {
+            data = {
+                code: "5001",
+                msg: "意外错误"
+            };
+        }
+
+    } else {
+        ctx.body = {
+            code: "1001",
+            msg: "未登录"
+        }
+    }
+};
 //网页以及404
 let webPage = async (ctx) => {
     console.log(1);
@@ -399,5 +439,5 @@ let webPage = async (ctx) => {
     ctx.body = body;
 };
 module.exports = {
-    register, login, list, signOut, upPost, userData, delPost, userPost, webPage, upFile, upload,
+    register, login, list, signOut, upPost, userData, delPost, userPost, webPage, upFile, upload, good
 };

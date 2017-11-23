@@ -4,8 +4,9 @@
 import Vue from "vue"
 import Vuex from "vuex"
 import axios from "axios"
+window.url = "http://localhost:3000",
 
-Vue.use(Vuex);
+  Vue.use(Vuex);
 axios.interceptors.response.use(function (res) {
   if (res.status === 200 && res.statusText === "OK") {
     return res.data;

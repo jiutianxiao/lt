@@ -27,7 +27,6 @@
     },
     computed: {...mapState(["url"])},
     created(){
-      this.a();
       document.title = "首页";
       localStorage.tag = 1;
       sessionStorage.tag = 2;
@@ -40,7 +39,6 @@
       })
     },
     methods: {
-      a
     },
     components: {pageList, pageTop, pageSusp}
   })

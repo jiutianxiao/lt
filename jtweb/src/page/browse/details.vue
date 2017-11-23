@@ -21,7 +21,7 @@
               <div>
                 <p>{{items.creater}}</p>
                 <p><span>时间：{{formatTime(items.ctime)}}</span> <span>{{items.fid}}楼</span></p>
-                <p v-if="index!==0">回复({{items.total - 1}})</p>
+                <p v-if="index!==0">回复({{items.total - 1}}) <span @click="dianzan">good(items)</span></p>
               </div>
             </div>
           </section>
@@ -63,6 +63,7 @@
 <script>
   import pageSusp from "@/components/pageSusp"
   import {formatTime} from "@/commonJS/commonJs"
+  import {good} from "@/JS/fn"
   import axios from "axios";
   import {mapState} from "vuex";
   export default({
@@ -138,6 +139,9 @@
       },
       FnPostSecond(cid){
         this.$router.push("/pagepost?pid=1506420176738&fid=3&cid=" + cid)
+      },
+      dianzan(){
+        good({pid: this.pid, fid: this.fid, cid: this.cid})
       }
     },
     components: {pageSusp}
