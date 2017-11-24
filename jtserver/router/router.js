@@ -2,7 +2,7 @@
  * Created by dianying-h5 on 2017/11/1.
  */
 
-let {register, login, list, signOut, upPost, userData, delPost, userPost, webPage, upFile,upload,good} = require("./fn");
+let {register, login, list, signOut, upPost, userData, delPost, userPost, webPage, upHead,upload,good} = require("./fn");
 
 let route = [
     {
@@ -46,15 +46,14 @@ let route = [
         fn: userPost
     },
     {
-        path: "/upFile",
+        path: "/upHead",
         methods: ["get", "post"],
         middle: upload.single("file"),
-        fn: upFile
+        fn: upHead
     },
     {
         path: "/good",
         methods: ["get", "post"],
-        middle: upload.single("file"),
         fn: good
     },
     {

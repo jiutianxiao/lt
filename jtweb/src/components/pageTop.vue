@@ -15,7 +15,7 @@
         <router-link to="#">交易</router-link>
       </li>
       <li class="pageTop-ul-li">
-        <router-link to="#">留言</router-link>
+        <router-link to="#">建议</router-link>
       </li>
     </ul>
   </nav>

@@ -4,6 +4,7 @@
 const MySql = require("mysql2");//mysql
 const mime = require("mime");//文件mime类型
 const multer = require("koa-multer");//上传文件模块
+const fs = require("fs");//上传文件模块
 
 //数据库配置
 const Connection = MySql.createConnection({
@@ -386,8 +387,23 @@ let delPost = async (ctx) => {
     }
 };
 //上传图片
-let upFile = async (ctx) => {
-    ctx.body = ctx.req.file
+let upHead = async (ctx) => {
+    let state = await FnSession(ctx);
+    if (state) {
+        let src = ctx.req.file;
+        console.log(`update user set headimg='${(src.path).replace("\\", "\\\\")}' where userid=${state.userid}`);
+        await Con(Connection, `update user set headimg='${(src.path).replace("\\", "\\\\")}' where userid=${state.userid}`);
+        ctx.body = {
+            code: "0000",
+            data: src,
+            msg: "上传成功"
+        }
+    } else {
+        ctx.body = {
+            code: "1001",
+            msg: "未登录"
+        }
+    }
 };
 //点赞 如果点赞数达到40以上自动加精
 let good = async (ctx) => {
@@ -434,7 +450,6 @@ let good = async (ctx) => {
 };
 //网页以及404
 let webPage = async (ctx) => {
-    console.log(1);
     let body = {};
     try {
         let path = "." + ctx.path;
@@ -450,5 +465,5 @@ let webPage = async (ctx) => {
     ctx.body = body;
 };
 module.exports = {
-    register, login, list, signOut, upPost, userData, delPost, userPost, webPage, upFile, upload, good
+    register, login, list, signOut, upPost, userData, delPost, userPost, webPage, upHead, upload, good
 };
