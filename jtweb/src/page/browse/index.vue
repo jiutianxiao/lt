@@ -4,7 +4,7 @@
     <pageSusp></pageSusp>
     <div class="app-index-list">
       <ul>
-        <li v-for="item in data">
+        <li v-for="item in indexData">
           <pageList class="" :data="item"></pageList>
         </li>
       </ul>
@@ -25,18 +25,9 @@
         data: {}
       }
     },
-    computed: {...mapState(["url"])},
+    computed: {...mapState(["url","indexData"])},
     created(){
       document.title = "首页";
-      localStorage.tag = 1;
-      sessionStorage.tag = 2;
-      axios.get(this.url + "/list", {params: {type: 0}}).then(data => {
-        if (data.code === "0000") {
-          this.data = data.data;
-        } else {
-          alert(data.msg)
-        }
-      })
     },
     methods: {
     },

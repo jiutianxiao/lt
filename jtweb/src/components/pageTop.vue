@@ -3,10 +3,10 @@
   <nav id="pageTop">
     <ul class="pageTop-ul">
       <li class="pageTop-ul-li">
-        <router-link to="#">热门</router-link>
+        <span @click="queryData(2)">热门</span>
       </li>
       <li class="pageTop-ul-li">
-        <router-link to="#">最新</router-link>
+        <span @click="queryData(0)">最新</span>
       </li>
       <li class="pageTop-ul-li">
         <router-link to="#">精品</router-link>
@@ -21,10 +21,29 @@
   </nav>
 </template>
 <script>
+  import {mapMutations} from "vuex"
+  import {indexList} from "@/JS/fn"
   export default({
     name: 'index',
     data(){
       return {}
+    },
+    created(){
+        this.queryData(2)
+    },
+    methods: {
+      ...mapMutations(["indexData"]),
+      indexList,
+      queryData(type){
+        console.log(1);
+        indexList(type).then(data => {
+          if (data.code === "0000") {
+            this.indexData(data.data)
+          } else {
+            alert(data.msg)
+          }
+        })
+      }
     },
     components: {}
   })

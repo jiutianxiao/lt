@@ -12,3 +12,7 @@ export const good = (obj) => {
     params: obj
   })
 };
+//首页列表
+export const indexList = (type) => {
+  return axios.get(url + "/list", {params: {type}})
+};

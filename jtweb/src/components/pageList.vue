@@ -31,7 +31,8 @@
         let data = this.data;
         good({pid: data.pid, fid: 1, cid: 1}).then(data => {
           alert(data.msg);
-          this.data.good = Number(this.data.good) + Number(data.data);
+          if (data.code === "0000")
+            this.data.good = Number(this.data.good) + Number(data.data);
         })
       }
     },

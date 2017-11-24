@@ -161,9 +161,14 @@ let list = async (ctx) => {
     page = page && page > 0 ? page-- : 0;
     limit = limit * (page + 1);
     let data = "";
-    if (type === "0")
+    if (type === "0") {//最新板块 判断最后回复的时间
         data = await Con(Connection, `SELECT * FROM list ORDER BY etime DESC LIMIT ${page},${limit}`);
-    else if (type === "1") {
+    }
+    else if (type === "2") {//最热板块 判断最近三天内回复最多的帖子
+        let time = new Date(new Date(new Date().setDate(new Date().getDate() - 3)).setHours(0, 0, 0, 0)).getTime();
+        console.log(`SELECT * FROM where etime>${time} ORDER BY num DESC LIMIT ${page},${limit}`);
+        data = await Con(Connection, `SELECT * FROM list where etime>${time} ORDER BY num DESC LIMIT ${page},${limit}`);
+    } else if (type === "1") {
         type = "post";
         let column = `pid,fid,cid,content,img,creater,ecreater,ctime`;
         if (typeof pid === "undefined") {

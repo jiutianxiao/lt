@@ -21,7 +21,8 @@ export const store = new Vuex.Store({
       sideBarOpened: false,
       userState: "",
       url: "http://localhost:3000",
-      post: {pid: "", fid: "", cid: ""}
+      post: {pid: "", fid: "", cid: ""},
+      indexData: {}
     },
 
     getters: {
@@ -43,6 +44,9 @@ export const store = new Vuex.Store({
       },
       postSave(state, data){
         state.post = data;
+      },
+      indexData(state, data){
+        state.indexData = data;
       }
     }
     ,
