@@ -9,7 +9,7 @@
         <span @click="queryData(0)">最新</span>
       </li>
       <li class="pageTop-ul-li">
-        <router-link to="#">精品</router-link>
+        <span @click="queryData(3)">精品</span>
       </li>
       <li class="pageTop-ul-li">
         <router-link to="#">交易</router-link>

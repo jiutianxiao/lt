@@ -166,8 +166,11 @@ let list = async (ctx) => {
     }
     else if (type === "2") {//最热板块 判断最近三天内回复最多的帖子
         let time = new Date(new Date(new Date().setDate(new Date().getDate() - 3)).setHours(0, 0, 0, 0)).getTime();
-        console.log(`SELECT * FROM where etime>${time} ORDER BY num DESC LIMIT ${page},${limit}`);
         data = await Con(Connection, `SELECT * FROM list where etime>${time} ORDER BY num DESC LIMIT ${page},${limit}`);
+    }
+    if (type === "3") {//加精板块
+        let time = new Date(new Date(new Date().setDate(new Date().getDate() - 3)).setHours(0, 0, 0, 0)).getTime();
+        data = await Con(Connection, `SELECT * FROM list where classify=1 ORDER BY etime DESC LIMIT ${page},${limit}`);
     } else if (type === "1") {
         type = "post";
         let column = `pid,fid,cid,content,img,creater,ecreater,ctime`;
@@ -386,7 +389,7 @@ let delPost = async (ctx) => {
 let upFile = async (ctx) => {
     ctx.body = ctx.req.file
 };
-//点赞
+//点赞 如果点赞数达到40以上自动加精
 let good = async (ctx) => {
     let state = await FnSession(ctx);
     if (state) {
@@ -396,12 +399,15 @@ let good = async (ctx) => {
             let a = await Con(Connection, `SELECT * FROM post WHERE pid='${pid}' AND fid='${fid}' AND cid='${cid}' AND creater='${me}' AND isNULL(content)`);
             if (a.length === 0) {
                 await Con(Connection, `update list set good=good+1 ,etime='${timeStamp}' where pid=${pid};
-                    INSERT INTO post (pid, fid, cid, creater, ctime) VALUES ('${pid}', ${fid}, ${cid}, '${me}', '${timeStamp}')`);
+                    INSERT INTO post (pid, fid, cid, creater, ctime) VALUES ('${pid}', ${fid}, ${cid}, '${me}', '${timeStamp}');
+                    UPDATE list SET classify=1 WHERE (pid='${pid}') AND good>40`);
+                // 加精 当点赞大于40的时候自动加精
                 ctx.body = {
                     code: "0000",
                     data: 1,
                     msg: "点赞成功"
-                }
+                };
+
             } else {
                 await Con(Connection, `update list set good=good-1 ,etime='${timeStamp}' where pid=${pid};
                      delete from post where pid=${pid} and fid=${fid} and cid=${cid} and isNULL(content)`);
