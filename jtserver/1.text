@@ -1,7 +1,0 @@
-`INSERT INTO post (pid, fid, cid, content, img, creater, ecreater, ctime)
- VALUES
- ('${pid}', '${fid}', '${Number(cid[0]["max"]) + 1}', '${content}', '${img}', '${me}', '${ecreater}', '${timeStamp}');
- update list set num='${Number(num[0]["num"]) + 1}',etime='${timeStamp}',ecreater='${ecreater}' where pid=${pid};
- INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del)
-  VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);
-  ${num[0]["creater"] !== me ? `INSERT INTO ${num[0]["creater"]} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0);${ecreater !== num[0]["creater"] && ecreater !== me ? `INSERT INTO ${ecreater} (pid, fid, cid, creater, content, ctime,unread,reply,del) VALUES ('${pid}', 1, 1, '${me}', '${content}',  '${timeStamp}',0,0,0)` : ""}` : ""}`
